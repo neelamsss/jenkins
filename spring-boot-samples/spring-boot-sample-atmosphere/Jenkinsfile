@@ -38,7 +38,7 @@ pipeline {
         		notify ('SUCCESS')
         	}
     	}
-}
+
 def notify(status){
     emailext (
       to: "saisrineelam@gmail.com",
