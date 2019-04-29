@@ -46,3 +46,11 @@ def notify(status){
         <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} 	[${env.BUILD_NUMBER}]</a></p>""",
     	)
  }
+try {
+stage("Building SONAR ...") {
+sh './gradlew clean sonarqube'
+}
+} catch (e) {emailext attachLog: true, body: 'See attached log', subject: 'BUSINESS Build Failure', to: 'priyarajanala1@gmail.com'
+step([$class: 'WsCleanup'])
+return
+}
