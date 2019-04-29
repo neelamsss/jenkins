@@ -3,13 +3,17 @@ pipeline {
 	environment {
 		project_path = "spring-boot-samples/spring-boot-sample-atmosphere"
 	}
+	dir(project_path) {
 	stages {
-		dir(project_path) {
+		
         		stage('compile,test and package') {
+				
+				
         			steps {
-            				cmd 'mvn clean package'
+            				bat 'mvn clean package'
             			}
-        		}
+        		  }
+			
         		stage('archival') {
         			steps {
             	 			archiveArtifacts 'target/*.jar'
@@ -22,6 +26,7 @@ pipeline {
         		}
 		}
 	}
+}
 	post { 
         	always { 
             		notify ('NOTIFY')
