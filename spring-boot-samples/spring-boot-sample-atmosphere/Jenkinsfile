@@ -4,28 +4,23 @@ pipeline {
 		project_path = "spring-boot-samples/spring-boot-sample-atmosphere"
 	}
 	stages {
-        	stage('compile,test and package') {
-        		steps {
-				dir(project_path) {
-            				sh 'mvn clean package'
-				}
-            		}
-        	}
-        	stage('archival') {
-        		steps {
-				dir(project_path) {
+		dir(project_path) {
+        		stage('compile,test and package') {
+        			steps {
+            				cmd 'mvn clean package'
+            			}
+        		}
+        		stage('archival') {
+        			steps {
             	 			archiveArtifacts 'target/*.jar'
-            			}
-			}
-        	}
-        	stage('unit test') {
-        		steps {
-				dir(project_path) {
-		            		junit 'target/surefire-reports/*.xml'
-            			}
-			}
-        	}
-	}
+				}
+        		}
+        		stage('unit test') {
+				steps {
+					junit 'target/surefire-reports/*.xml'
+				}
+        		}
+		}
 	post { 
         	always { 
             		notify ('NOTIFY')
@@ -46,11 +41,3 @@ def notify(status){
         <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} 	[${env.BUILD_NUMBER}]</a></p>""",
     	)
  }
-try {
-stage("Building SONAR ...") {
-sh './gradlew clean sonarqube'
-}
-} catch (e) {emailext attachLog: true, body: 'See attached log', subject: 'BUSINESS Build Failure', to: 'saisrineelam@gmail.com'
-step([$class: 'WsCleanup'])
-return
-}
